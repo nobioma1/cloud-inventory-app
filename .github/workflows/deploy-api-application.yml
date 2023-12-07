@@ -8,7 +8,7 @@ on:
       - 'apps/api'
 
 env:
-  EB_ARTIFACTS_BUCKET: '${{ secrets.PROJECT_NAME }}-artifacts'
+  EB_ARTIFACTS_BUCKET: '${{ secrets.PROJECT_NAME }}/eb-artifacts'
   EB_APPLICATION_NAME: ${{ secrets.PROJECT_NAME }}
   EB_ENVIRONMENT_NAME: '${{ secrets.PROJECT_NAME }}-production'
   APP_BUNDLE_NAME: '${{ secrets.PROJECT_NAME }}-${{ github.sha }}.zip'

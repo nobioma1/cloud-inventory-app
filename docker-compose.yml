@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: app
+    build: ./apps/client
+    volumes:
+      - ./apps/client:/app
+      - /app/node_modules
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+
+  backend:
+    container_name: api
+    build: ./apps/api
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+    ports:
+      - '8000:8000'
+    environment:
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=business_inventory
+      - DATABASE_HOST=db
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: business_inventory
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./db-data:/var/lib/mysql
+
+volumes:
+  db-data:

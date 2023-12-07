@@ -46,20 +46,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Check for changes in api folder
+        id: buildapifilter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install Dependencies
+        if: steps.buildapifilter.outputs.api == 'true'
         run: npm install
 
       - name: Build
+        if: steps.buildapifilter.outputs.api == 'true'
         run: npm run build
       
       - name: Create zip deployment package
+        if: steps.buildapifilter.outputs.api == 'true'
         run: zip -r ${{ env.APP_BUNDLE_NAME }} ./ -x "node_modules/*"
 
       - name: Upload package to S3 bucket
+        if: steps.buildapifilter.outputs.api == 'true'
         run: aws s3 cp ${{ env.APP_BUNDLE_NAME }} s3://${{env.EB_ARTIFACTS_BUCKET}}
 
   deploy:
@@ -69,12 +81,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Check for changes in api folder
+        id: deployapifilter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Create EB application version
+        if: steps.deployapifilter.outputs.api == 'true'
         run: |
           aws elasticbeanstalk create-application-version \
           --application-name ${{env.EB_APPLICATION_NAME}} \
@@ -82,6 +103,7 @@ jobs:
           --source-bundle S3Bucket="${{ env.EB_ARTIFACTS_BUCKET }}",S3Key="${{ env.APP_BUNDLE_NAME }}"
 
       - name: Deploy new application version
+        if: steps.deployapifilter.outputs.api == 'true'
         run: |
           aws elasticbeanstalk update-environment \
           --environment-name ${{ env.EB_ENVIRONMENT_NAME }} \
@@ -96,6 +118,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Check for changes in client folder
+        id: deployclientfilter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            client:
+              - 'apps/client/**'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -103,10 +132,13 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Build React App
+        if: steps.deployclientfilter.outputs.client == 'true'
         run: npm install
         
       - name: Install Dependencies
+        if: steps.deployclientfilter.outputs.client == 'true'
         run: npm run build
 
       - name: Deploy app build to S3 bucket
+        if: steps.deployclientfilter.outputs.client == 'true'
         run: aws s3 sync ./dist/ s3://x22212973-inventory-app-production --delete

@@ -71,6 +71,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Create EB application version
         run: |
@@ -97,6 +99,8 @@ jobs:
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Build React App
         run: npm install

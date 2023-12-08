@@ -20,11 +20,11 @@ services:
       - /app/node_modules
     ports:
       - '8000:8000'
-    environment:
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=password
-      - DATABASE_NAME=business_inventory
-      - DATABASE_HOST=db
+    # environment:
+      # - DATABASE_USER=root
+      # - DATABASE_PASSWORD=password
+      # - DATABASE_NAME=business_inventory
+      # - DATABASE_HOST=db
     depends_on:
       - db
 

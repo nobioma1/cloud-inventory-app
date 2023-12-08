@@ -73,12 +73,13 @@ const ProductReports = ({ workspaceId, productId }: ProductReportsProps) => {
                 {report.isResolved ? 'Resolved' : 'Pending Resolution'}
               </Text>
             </HStack>
-            {/* <Button
+            <Button
               size="sm"
+              display="none"
               onClick={handleResolve(report.id, report.isResolved)}
             >
               {report.isResolved ? 'Undo resolution' : 'Resolve'}
-            </Button> */}
+            </Button>
           </Flex>
           <Text>
             <Text as="span" fontWeight="bold">

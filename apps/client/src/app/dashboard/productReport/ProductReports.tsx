@@ -75,7 +75,6 @@ const ProductReports = ({ workspaceId, productId }: ProductReportsProps) => {
             </HStack>
             <Button
               size="sm"
-              display="none"
               onClick={handleResolve(report.id, report.isResolved)}
             >
               {report.isResolved ? 'Undo resolution' : 'Resolve'}

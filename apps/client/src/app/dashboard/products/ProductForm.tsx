@@ -42,7 +42,10 @@ const productSchema = Yup.object().shape({
     250,
     'Description should be less than or equal to 250 characters.'
   ),
-  quantityInStock: Yup.number().integer().required('Quantity is not valid'),
+  quantityInStock: Yup.number()
+    .integer()
+    .positive()
+    .required('Quantity is not valid'),
 });
 
 const ProductForm = ({

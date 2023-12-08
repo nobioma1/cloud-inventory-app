@@ -52,7 +52,7 @@ export class ReportsService {
     updateReportDto: UpdateReportDto,
   ) {
     await this.reportRepository.update({ id: reportId }, updateReportDto);
-    return this.findOne(reportId, productId);
+    return this.findOne(productId, reportId);
   }
 
   remove(reportId: string) {
